@@ -70,6 +70,30 @@ const config: ControlPanelConfig = {
         ],
         [
           {
+            name: 'positive_suffix',
+            config: {
+              type: 'TextControl',
+              label: t('Positive suffix'),
+              description: t(
+                'Suffix to apply after the percentage display with positive value',
+              ),
+            },
+          },
+        ],
+        [
+          {
+            name: 'negative_suffix',
+            config: {
+              type: 'TextControl',
+              label: t('Negative suffix'),
+              description: t(
+                'Suffix to apply after the percentage display with negative value',
+              ),
+            },
+          },
+        ],
+        [
+          {
             name: 'show_timestamp',
             config: {
               type: 'CheckboxControl',

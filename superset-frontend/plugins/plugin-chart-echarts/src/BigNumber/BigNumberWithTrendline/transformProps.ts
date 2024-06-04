@@ -61,6 +61,8 @@ export default function transformProps(
     colorPicker,
     compareLag: compareLag_,
     compareSuffix = '',
+    positiveSuffix = '',
+    negativeSuffix = '',
     timeFormat,
     headerFontSize,
     metric = 'value',
@@ -127,7 +129,9 @@ export default function transformProps(
             : 0;
           formattedSubheader = `${formatPercentChange(
             percentChange,
-          )} ${compareSuffix}`;
+          )} ${compareSuffix}${
+            percentChange > 0 && positiveSuffix ? ` ${positiveSuffix}` : ''
+          }${percentChange < 0 && negativeSuffix ? ` ${negativeSuffix}` : ''}`;
         }
       }
     }
