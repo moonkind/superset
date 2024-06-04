@@ -21,6 +21,7 @@ import React, {
   ReactNode,
   useContext,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from 'react';
@@ -101,6 +102,7 @@ const ChartHeaderStyles = styled.div`
     .dropdown.btn-group {
       pointer-events: none;
       vertical-align: top;
+
       & > * {
         pointer-events: auto;
       }
@@ -178,6 +180,8 @@ const SliceHeader: FC<SliceHeaderProps> = ({
 
   const canExplore = !editMode && supersetCanExplore;
 
+  const [name, link] = useMemo(() => sliceName.split('~'), [sliceName]);
+
   useEffect(() => {
     const headerElement = headerRef.current;
     if (canExplore) {
@@ -198,18 +202,13 @@ const SliceHeader: FC<SliceHeaderProps> = ({
   return (
     <ChartHeaderStyles data-test="slice-header" ref={innerRef}>
       <div className="header-title" ref={headerRef}>
-        <Tooltip title={headerTooltip}>
+        <Tooltip title={link ? '' : headerTooltip}>
           <EditableTitle
-            title={
-              sliceName ||
-              (editMode
-                ? '---' // this makes an empty title clickable
-                : '')
-            }
+            title={editMode ? sliceName || '---' : name}
             canEdit={editMode}
             onSaveTitle={updateSliceName}
             showTooltip={false}
-            url={canExplore ? exploreUrl : undefined}
+            url={link || (canExplore ? exploreUrl : undefined)}
           />
         </Tooltip>
         {!!Object.values(annotationQuery).length && (
