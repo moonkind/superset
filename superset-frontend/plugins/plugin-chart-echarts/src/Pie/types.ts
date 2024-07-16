@@ -80,6 +80,8 @@ export const DEFAULT_FORM_DATA: EchartsPieFormData = {
   showLabelsThreshold: 5,
   dateFormat: 'smart_date',
   roseType: null,
+  borderRadius: 0,
+  padAngle: 0,
 };
 
 export type PieChartTransformedProps =

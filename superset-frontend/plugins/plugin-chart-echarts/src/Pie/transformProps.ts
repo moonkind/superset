@@ -157,6 +157,8 @@ export default function transformProps(
     sliceId,
     showTotal,
     roseType,
+    padAngle,
+    borderRadius,
   }: EchartsPieFormData = {
     ...DEFAULT_LEGEND_FORM_DATA,
     ...DEFAULT_PIE_FORM_DATA,
@@ -290,6 +292,10 @@ export default function transformProps(
       avoidLabelOverlap: true,
       labelLine: labelsOutside && labelLine ? { show: true } : { show: false },
       minShowLabelAngle,
+      padAngle,
+      itemStyle: {
+        borderRadius,
+      },
       label: labelsOutside
         ? {
             ...defaultLabel,
