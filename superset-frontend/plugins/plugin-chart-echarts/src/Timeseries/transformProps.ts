@@ -185,6 +185,15 @@ export default function transformProps(
     yAxisTitleMargin,
     yAxisTitlePosition,
     zoomable,
+    emphasisFocusSeries,
+    customLabelPosition,
+    labelDistance,
+    labelAlign,
+    labelVerticalAlign,
+    labelRotate,
+    labelFontSize,
+    labelCustomFormatter,
+    labelNameFontSize,
   }: EchartsTimeseriesFormData = { ...DEFAULT_FORM_DATA, ...formData };
   const refs: Refs = {};
   const groupBy = ensureIsArray(groupby);
@@ -327,6 +336,15 @@ export default function transformProps(
         isHorizontal,
         lineStyle,
         timeCompare: array,
+        emphasisFocusSeries,
+        customLabelPosition,
+        labelDistance,
+        labelAlign,
+        labelVerticalAlign,
+        labelRotate,
+        labelFontSize,
+        labelCustomFormatter,
+        labelNameFontSize,
       },
     );
     if (transformedSeries) {

@@ -36,11 +36,13 @@ import { SeriesOption } from 'echarts';
 import {
   CallbackDataParams,
   DefaultStatesMixin,
+  HorizontalAlign,
   ItemStyleOption,
   LineStyleOption,
   OptionName,
   SeriesLabelOption,
   SeriesLineLabelOption,
+  VerticalAlign,
   ZRLineType,
 } from 'echarts/types/src/util/types';
 import {
@@ -64,6 +66,9 @@ import {
 } from '../utils/annotation';
 import { getChartPadding, getTimeCompareStackId } from '../utils/series';
 import {
+  LabelAlignControlsValue,
+  LabelPositionControlsValue,
+  LabelVerticalAlignControlsValue,
   OpacityEnum,
   StackControlsValue,
   TIMESERIES_CONSTANTS,
@@ -166,6 +171,15 @@ export function transformSeries(
     lineStyle?: LineStyleOption;
     queryIndex?: number;
     timeCompare?: string[];
+    emphasisFocusSeries?: boolean;
+    customLabelPosition?: LabelPositionControlsValue | null;
+    labelDistance?: string | number;
+    labelAlign?: LabelAlignControlsValue | null;
+    labelVerticalAlign?: LabelVerticalAlignControlsValue | null;
+    labelRotate?: string | number;
+    labelFontSize?: string | number;
+    labelCustomFormatter?: boolean;
+    labelNameFontSize?: string | number;
   },
 ): SeriesOption | undefined {
   const { name } = series;
@@ -192,6 +206,15 @@ export function transformSeries(
     isHorizontal = false,
     queryIndex = 0,
     timeCompare = [],
+    emphasisFocusSeries = false,
+    customLabelPosition = null,
+    labelDistance,
+    labelAlign = null,
+    labelVerticalAlign = null,
+    labelRotate,
+    labelFontSize,
+    labelCustomFormatter,
+    labelNameFontSize,
   } = opts;
   const contexts = seriesContexts[name || ''] || [];
   const hasForecast =
@@ -241,7 +264,10 @@ export function transformSeries(
     color: colorScale(colorScaleKey, sliceId),
     opacity,
   };
-  let emphasis = {};
+  let emphasis: any = {};
+  if (emphasisFocusSeries) {
+    emphasis.focus = 'series';
+  }
   let showSymbol = false;
   if (!isConfidenceBand) {
     if (plotType === 'scatter') {
@@ -268,6 +294,24 @@ export function transformSeries(
     isConfidenceBand || (stack === StackControlsValue.Stream && area)
       ? { ...opts.lineStyle, opacity: OpacityEnum.Transparent }
       : { ...opts.lineStyle, opacity };
+
+  const fontSizeNumber =
+    typeof labelFontSize === 'string'
+      ? parseFloat(labelFontSize)
+      : labelFontSize;
+  const labelDistanceNumber =
+    typeof labelDistance === 'string'
+      ? parseFloat(labelDistance)
+      : labelDistance;
+  const labelRotateNumber =
+    typeof labelRotate === 'string' ? parseFloat(labelRotate) : labelRotate;
+  const labelNameFontSizeNumber =
+    typeof labelNameFontSize === 'string'
+      ? parseFloat(labelNameFontSize)
+      : labelNameFontSize;
+
+  const position = customLabelPosition || (isHorizontal ? 'right' : 'top');
+
   return {
     ...series,
     connectNulls,
@@ -299,41 +343,67 @@ export function transformSeries(
       // bold on hover as required since 5.3.0 to retain backwards feature parity:
       // https://apache.github.io/echarts-handbook/en/basics/release-note/5-3-0/#removing-the-default-bolding-emphasis-effect-in-the-line-chart
       // TODO: should consider only adding emphasis to currently hovered series
-      lineStyle: {
-        width: 'bolder',
-      },
+      ...(emphasisFocusSeries
+        ? {}
+        : {
+            lineStyle: {
+              width: 'bolder',
+            },
+          }),
       ...emphasis,
     },
     showSymbol,
     symbolSize: markerSize,
     label: {
       show: !!showValue,
-      position: isHorizontal ? 'right' : 'top',
-      formatter: (params: any) => {
-        const { value, dataIndex, seriesIndex, seriesName } = params;
-        const numericValue = isHorizontal ? value[0] : value[1];
-        const isSelectedLegend = !legendState || legendState[seriesName];
-        const isAreaExpand = stack === StackControlsValue.Expand;
-        if (!formatter) {
-          return numericValue;
-        }
-        if (!stack && isSelectedLegend) {
-          return formatter(numericValue);
-        }
-        if (!onlyTotal) {
-          if (
-            numericValue >=
-            (thresholdValues[dataIndex] || Number.MIN_SAFE_INTEGER)
-          ) {
-            return formatter(numericValue);
+      position,
+      ...(fontSizeNumber ? { fontSize: fontSizeNumber } : {}),
+      ...(labelDistanceNumber ? { distance: labelDistanceNumber } : {}),
+      ...(labelRotateNumber ? { rotate: labelRotateNumber } : {}),
+      ...(labelAlign ? { align: labelAlign as HorizontalAlign } : {}),
+      ...(labelVerticalAlign
+        ? { verticalAlign: labelVerticalAlign as VerticalAlign }
+        : {}),
+      ...(labelCustomFormatter
+        ? {
+            formatter: '{c} - {name|{a}}',
+            rich: {
+              name: {
+                ...(labelNameFontSizeNumber
+                  ? { fontSize: labelNameFontSizeNumber }
+                  : {}),
+              },
+            },
           }
-          return '';
-        }
-        if (seriesIndex === showValueIndexes[dataIndex]) {
-          return formatter(isAreaExpand ? 1 : totalStackedValues[dataIndex]);
-        }
-        return '';
-      },
+        : {
+            formatter: (params: any) => {
+              const { value, dataIndex, seriesIndex, seriesName } = params;
+              const numericValue = isHorizontal ? value[0] : value[1];
+              const isSelectedLegend = !legendState || legendState[seriesName];
+              const isAreaExpand = stack === StackControlsValue.Expand;
+              if (!formatter) {
+                return numericValue;
+              }
+              if (!stack && isSelectedLegend) {
+                return formatter(numericValue);
+              }
+              if (!onlyTotal) {
+                if (
+                  numericValue >=
+                  (thresholdValues[dataIndex] || Number.MIN_SAFE_INTEGER)
+                ) {
+                  return formatter(numericValue);
+                }
+                return '';
+              }
+              if (seriesIndex === showValueIndexes[dataIndex]) {
+                return formatter(
+                  isAreaExpand ? 1 : totalStackedValues[dataIndex],
+                );
+              }
+              return '';
+            },
+          }),
     },
   };
 }
