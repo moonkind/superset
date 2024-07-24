@@ -314,7 +314,18 @@ const config: ControlPanelConfig = {
       expanded: true,
       controlSetRows: [
         ...seriesOrderSection,
-        ['color_scheme'],
+        [
+          {
+            name: 'customColors',
+            config: {
+              type: 'ColorPickerArrayControl',
+              label: 'Цвета',
+              renderTrigger: true,
+              default: [],
+              description: 'Настроить цвета диаграммы',
+            },
+          },
+        ],
         [showValueControl],
         [
           {

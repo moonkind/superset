@@ -40,6 +40,7 @@ import {
   t,
   TimeseriesChartDataResponseResult,
   NumberFormats,
+  CategoricalColorScale,
 } from '@superset-ui/core';
 import {
   extractExtraMetrics,
@@ -194,6 +195,7 @@ export default function transformProps(
     labelFontSize,
     labelCustomFormatter,
     labelNameFontSize,
+    customColors,
   }: EchartsTimeseriesFormData = { ...DEFAULT_FORM_DATA, ...formData };
   const refs: Refs = {};
   const groupBy = ensureIsArray(groupby);
@@ -208,7 +210,11 @@ export default function transformProps(
     return { ...acc, [entry[0]]: entry[1] };
   }, {});
 
-  const colorScale = CategoricalColorNamespace.getScale(colorScheme as string);
+  const colorScale =
+    customColors && customColors.length > 0
+      ? new CategoricalColorScale(customColors)
+      : CategoricalColorNamespace.getScale(colorScheme as string);
+
   const rebasedData = rebaseForecastDatum(data, verboseMap);
   let xAxisLabel = getXAxisLabel(chartProps.rawFormData) as string;
   if (

@@ -364,46 +364,43 @@ export function transformSeries(
       ...(labelVerticalAlign
         ? { verticalAlign: labelVerticalAlign as VerticalAlign }
         : {}),
-      ...(labelCustomFormatter
-        ? {
-            formatter: '{c} - {name|{a}}',
-            rich: {
-              name: {
-                ...(labelNameFontSizeNumber
-                  ? { fontSize: labelNameFontSizeNumber }
-                  : {}),
-              },
-            },
+      formatter: (params: any) => {
+        const { value, dataIndex, seriesIndex, seriesName } = params;
+        const numericValue = isHorizontal ? value[0] : value[1];
+        const isSelectedLegend = !legendState || legendState[seriesName];
+        const isAreaExpand = stack === StackControlsValue.Expand;
+
+        const label = labelCustomFormatter ? ` - {name|${seriesName}}` : '';
+
+        if (!formatter) {
+          return numericValue + label;
+        }
+        if (!stack && isSelectedLegend) {
+          return formatter(numericValue) + label;
+        }
+        if (!onlyTotal) {
+          if (
+            numericValue >=
+            (thresholdValues[dataIndex] || Number.MIN_SAFE_INTEGER)
+          ) {
+            return formatter(numericValue) + label;
           }
-        : {
-            formatter: (params: any) => {
-              const { value, dataIndex, seriesIndex, seriesName } = params;
-              const numericValue = isHorizontal ? value[0] : value[1];
-              const isSelectedLegend = !legendState || legendState[seriesName];
-              const isAreaExpand = stack === StackControlsValue.Expand;
-              if (!formatter) {
-                return numericValue;
-              }
-              if (!stack && isSelectedLegend) {
-                return formatter(numericValue);
-              }
-              if (!onlyTotal) {
-                if (
-                  numericValue >=
-                  (thresholdValues[dataIndex] || Number.MIN_SAFE_INTEGER)
-                ) {
-                  return formatter(numericValue);
-                }
-                return '';
-              }
-              if (seriesIndex === showValueIndexes[dataIndex]) {
-                return formatter(
-                  isAreaExpand ? 1 : totalStackedValues[dataIndex],
-                );
-              }
-              return '';
-            },
-          }),
+          return '';
+        }
+        if (seriesIndex === showValueIndexes[dataIndex]) {
+          return (
+            formatter(isAreaExpand ? 1 : totalStackedValues[dataIndex]) + label
+          );
+        }
+        return '';
+      },
+      rich: {
+        name: {
+          ...(labelNameFontSizeNumber
+            ? { fontSize: labelNameFontSizeNumber }
+            : {}),
+        },
+      },
     },
   };
 }
