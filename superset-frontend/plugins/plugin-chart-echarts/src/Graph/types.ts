@@ -78,6 +78,8 @@ export const DEFAULT_FORM_DATA: EchartsGraphFormData = {
   friction: 0.2,
   legendOrientation: LegendOrientation.Top,
   legendType: LegendType.Scroll,
+  customColors: [],
+  emphasisFocus: true,
 };
 
 export type tooltipFormatParams = {

@@ -96,7 +96,67 @@ const controlPanel: ControlPanelConfig = {
       label: t('Chart options'),
       expanded: true,
       controlSetRows: [
-        ['color_scheme'],
+        [
+          {
+            name: 'seriesName',
+            config: {
+              type: 'TextControl',
+              label: 'Название графа',
+              renderTrigger: true,
+              default: '',
+              description: 'Название графа',
+            },
+          },
+        ],
+        [
+          {
+            name: 'defaultTooltipFormatters',
+            config: {
+              type: 'CheckboxControl',
+              label: 'Стандартные тултипы',
+              default: false,
+              renderTrigger: true,
+              description: 'Стандартные тултипы',
+            },
+          },
+        ],
+        [
+          {
+            name: 'labelFontSize',
+            config: {
+              type: 'TextControl',
+              label: 'Размер шрифта',
+              renderTrigger: true,
+              isFloat: true,
+              default: '',
+              description: 'Размер шрифта',
+            },
+          },
+        ],
+        [
+          {
+            name: 'emphasisFocus',
+            config: {
+              type: 'CheckboxControl',
+              label: 'Выделение при наведении',
+              default: true,
+              renderTrigger: true,
+              description: 'Прячет связи при наведении курсора',
+            },
+          },
+        ],
+        [
+          {
+            name: 'customColors',
+            config: {
+              type: 'ColorPickerArrayControl',
+              label: 'Цвета',
+              renderTrigger: true,
+              default: [],
+              description: 'Настроить цвета диаграммы',
+            },
+          },
+        ],
         ...legendSection,
         [<ControlSubSectionHeader>{t('Layout')}</ControlSubSectionHeader>],
         [

@@ -41,6 +41,8 @@ const {
   numberFormat,
   showLabels,
   roseType,
+  borderRadius,
+  padAngle,
 } = DEFAULT_FORM_DATA;
 
 const config: ControlPanelConfig = {
@@ -256,6 +258,36 @@ const config: ControlPanelConfig = {
               description: t('Inner radius of donut hole'),
               visibility: ({ controls }: ControlPanelsContainerProps) =>
                 Boolean(controls?.donut?.value),
+            },
+          },
+        ],
+        [
+          {
+            name: 'padAngle',
+            config: {
+              type: 'SliderControl',
+              label: 'Угол отступа',
+              renderTrigger: true,
+              min: 0,
+              max: 60,
+              step: 0.5,
+              default: padAngle,
+              description: 'Отступ между секторами диаграммы',
+            },
+          },
+        ],
+        [
+          {
+            name: 'borderRadius',
+            config: {
+              type: 'SliderControl',
+              label: 'Скругление углов',
+              renderTrigger: true,
+              min: 0,
+              max: 100,
+              step: 1,
+              default: borderRadius,
+              description: 'Скругление углов секторов диаграммы',
             },
           },
         ],

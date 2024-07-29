@@ -33,9 +33,12 @@ import {
 import {
   legendSection,
   minorTicks,
+  onlyTotalControl,
+  percentageThresholdControl,
   richTooltipSection,
   seriesOrderSection,
-  showValueSection,
+  showValueControl,
+  stackControl,
   truncateXAxis,
   xAxisBounds,
   xAxisLabelRotation,
@@ -46,6 +49,11 @@ import {
   DEFAULT_FORM_DATA,
   TIME_SERIES_DESCRIPTION_TEXT,
 } from '../../constants';
+import {
+  LabelAlignControlOptions,
+  LabelPositionControlOptions,
+  LabelVerticalAlignControlOptions,
+} from '../../../constants';
 
 const {
   logAxis,
@@ -54,6 +62,15 @@ const {
   yAxisBounds,
   zoomable,
   orientation,
+  emphasisFocusSeries,
+  customLabelPosition,
+  labelDistance,
+  labelAlign,
+  labelVerticalAlign,
+  labelRotate,
+  labelFontSize,
+  labelCustomFormatter,
+  labelNameFontSize,
 } = DEFAULT_FORM_DATA;
 
 function createAxisTitleControl(axis: 'x' | 'y'): ControlSetRow[] {
@@ -297,8 +314,142 @@ const config: ControlPanelConfig = {
       expanded: true,
       controlSetRows: [
         ...seriesOrderSection,
-        ['color_scheme'],
-        ...showValueSection,
+        [
+          {
+            name: 'customColors',
+            config: {
+              type: 'ColorPickerArrayControl',
+              label: 'Цвета',
+              renderTrigger: true,
+              default: [],
+              description: 'Настроить цвета диаграммы',
+            },
+          },
+        ],
+        [showValueControl],
+        [
+          {
+            name: 'customLabelPosition',
+            config: {
+              type: 'SelectControl',
+              label: 'Расположение значения',
+              renderTrigger: true,
+              choices: LabelPositionControlOptions,
+              default: customLabelPosition,
+              description: 'Указать место расположения значения',
+              visibility: ({ controls }: ControlPanelsContainerProps) =>
+                Boolean(controls?.show_value?.value),
+            },
+          },
+        ],
+        [
+          {
+            name: 'labelDistance',
+            config: {
+              type: 'TextControl',
+              label: 'Смещение значения',
+              renderTrigger: true,
+              isFloat: true,
+              default: labelDistance,
+              description: 'Расстояние, на которое будет смещено значение',
+              visibility: ({ controls }: ControlPanelsContainerProps) =>
+                Boolean(controls?.show_value?.value),
+            },
+          },
+        ],
+        [
+          {
+            name: 'labelAlign',
+            config: {
+              type: 'SelectControl',
+              label: 'Горизонтальное выравнивание',
+              renderTrigger: true,
+              choices: LabelAlignControlOptions,
+              default: labelAlign,
+              description: 'Выравнивание значения по горизонтали',
+              visibility: ({ controls }: ControlPanelsContainerProps) =>
+                Boolean(controls?.show_value?.value),
+            },
+          },
+        ],
+        [
+          {
+            name: 'labelVerticalAlign',
+            config: {
+              type: 'SelectControl',
+              label: 'Вертикальное выравнивание',
+              renderTrigger: true,
+              choices: LabelVerticalAlignControlOptions,
+              default: labelVerticalAlign,
+              description: 'Выравнивание значения по вертикали',
+              visibility: ({ controls }: ControlPanelsContainerProps) =>
+                Boolean(controls?.show_value?.value),
+            },
+          },
+        ],
+        [
+          {
+            name: 'labelRotate',
+            config: {
+              type: 'TextControl',
+              label: 'Угол поворота значения',
+              renderTrigger: true,
+              isFloat: true,
+              default: labelRotate,
+              description: 'Угол поворота значения',
+              visibility: ({ controls }: ControlPanelsContainerProps) =>
+                Boolean(controls?.show_value?.value),
+            },
+          },
+        ],
+        [
+          {
+            name: 'labelFontSize',
+            config: {
+              type: 'TextControl',
+              label: 'Размер шрифта',
+              renderTrigger: true,
+              isFloat: true,
+              default: labelFontSize,
+              description: 'Размер шрифта значения',
+              visibility: ({ controls }: ControlPanelsContainerProps) =>
+                Boolean(controls?.show_value?.value),
+            },
+          },
+        ],
+        [
+          {
+            name: 'labelCustomFormatter',
+            config: {
+              type: 'CheckboxControl',
+              label: 'Значение с заголовком',
+              default: labelCustomFormatter,
+              renderTrigger: true,
+              description: 'Изменить форматирование надписи',
+              visibility: ({ controls }: ControlPanelsContainerProps) =>
+                Boolean(controls?.show_value?.value),
+            },
+          },
+        ],
+        [
+          {
+            name: 'labelNameFontSize',
+            config: {
+              type: 'TextControl',
+              label: 'Размер шрифта заголовка',
+              renderTrigger: true,
+              isFloat: true,
+              default: labelNameFontSize,
+              description: 'Размер шрифта заголовка',
+              visibility: ({ controls }: ControlPanelsContainerProps) =>
+                Boolean(controls?.show_value?.value) &&
+                Boolean(controls?.labelCustomFormatter?.value),
+            },
+          },
+        ],
+        [stackControl],
+        [onlyTotalControl],
+        [percentageThresholdControl],
         [minorTicks],
         [
           {
@@ -318,6 +469,20 @@ const config: ControlPanelConfig = {
         ...richTooltipSection,
         [<ControlSubSectionHeader>{t('Y Axis')}</ControlSubSectionHeader>],
         ...createAxisControl('y'),
+        [
+          {
+            name: 'emphasisFocusSeries',
+            config: {
+              type: 'CheckboxControl',
+              label: 'Выделение при наведении',
+              default: emphasisFocusSeries,
+              renderTrigger: true,
+              description:
+                'Прячет столбцы при наведении курсора, оставляя только того типа, ' +
+                'который под курсором',
+            },
+          },
+        ],
       ],
     },
   ],
