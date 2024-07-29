@@ -22,6 +22,7 @@ import {
   DataRecord,
   DataRecordValue,
   tooltipHtml,
+  CategoricalColorScale,
 } from '@superset-ui/core';
 import type { EChartsCoreOption } from 'echarts/core';
 import type { GraphSeriesOption } from 'echarts/charts';
@@ -193,16 +194,32 @@ export default function transformProps(
     baseNodeSize,
     edgeSymbol,
     sliceId,
+    customColors,
+    emphasisFocus,
+    labelFontSize,
+    seriesName,
+    defaultTooltipFormatters,
   }: EchartsGraphFormData = { ...DEFAULT_GRAPH_FORM_DATA, ...formData };
 
   const refs: Refs = {};
   const metricLabel = getMetricLabel(metric);
-  const colorFn = CategoricalColorNamespace.getScale(colorScheme as string);
+
+  const colorFn =
+    customColors && customColors.length > 0
+      ? new CategoricalColorScale(customColors)
+      : CategoricalColorNamespace.getScale(colorScheme as string);
+
   const firstColor = colorFn.range()[0];
+
   const nodes: { [name: string]: number } = {};
   const categories: Set<string> = new Set();
   const echartNodes: EChartGraphNode[] = [];
   const echartLinks: EdgeWithStyles[] = [];
+
+  const fontSizeNumber =
+    typeof labelFontSize === 'string'
+      ? parseFloat(labelFontSize)
+      : labelFontSize;
 
   /**
    * Get the node id of an existing node,
@@ -226,6 +243,7 @@ export default function transformProps(
         tooltip: {
           ...getDefaultTooltip(refs),
           ...DEFAULT_GRAPH_SERIES_OPTION.tooltip,
+          ...(defaultTooltipFormatters ? { formatter: undefined } : {}),
         },
         itemStyle: { color },
       });
@@ -299,6 +317,7 @@ export default function transformProps(
   const categoryList = [...categories];
   const series: GraphSeriesOption[] = [
     {
+      ...(seriesName ? { name: seriesName } : {}),
       zoom: DEFAULT_GRAPH_SERIES_OPTION.zoom,
       type: 'graph',
       categories: categoryList.map(c => ({
@@ -325,9 +344,16 @@ export default function transformProps(
       selectedMode,
       ...getChartPadding(showLegend, legendOrientation, legendMargin),
       animation: DEFAULT_GRAPH_SERIES_OPTION.animation,
-      label: DEFAULT_GRAPH_SERIES_OPTION.label,
+      label: {
+        ...DEFAULT_GRAPH_SERIES_OPTION.label,
+        ...(fontSizeNumber ? { fontSize: fontSizeNumber } : {}),
+      },
       lineStyle: DEFAULT_GRAPH_SERIES_OPTION.lineStyle,
-      emphasis: DEFAULT_GRAPH_SERIES_OPTION.emphasis,
+      ...(emphasisFocus
+        ? {
+            emphasis: DEFAULT_GRAPH_SERIES_OPTION.emphasis,
+          }
+        : {}),
     },
   ];
 
@@ -337,16 +363,20 @@ export default function transformProps(
     tooltip: {
       ...getDefaultTooltip(refs),
       show: !inContextMenu,
-      formatter: (params: any): string => {
-        const source = sanitizeHtml(
-          getKeyByValue(nodes, Number(params.data.source)),
-        );
-        const target = sanitizeHtml(
-          getKeyByValue(nodes, Number(params.data.target)),
-        );
-        const title = `${source} > ${target}`;
-        return tooltipHtml([[metricLabel, `${params.value}`]], title);
-      },
+      ...(defaultTooltipFormatters
+        ? {}
+        : {
+            formatter: (params: any): string => {
+              const source = sanitizeHtml(
+                getKeyByValue(nodes, Number(params.data.source)),
+              );
+              const target = sanitizeHtml(
+                getKeyByValue(nodes, Number(params.data.target)),
+              );
+              const title = `${source} > ${target}`;
+              return tooltipHtml([[metricLabel, `${params.value}`]], title);
+            },
+          }),
     },
     legend: {
       ...getLegendProps(legendType, legendOrientation, showLegend, theme),

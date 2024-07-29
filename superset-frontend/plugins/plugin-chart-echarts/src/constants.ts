@@ -75,6 +75,33 @@ export enum StackControlsValue {
   Expand = 'Expand',
 }
 
+export enum LabelPositionControlsValue {
+  Left = 'left',
+  Right = 'right',
+  Top = 'top',
+  Bottom = 'bottom',
+  Inside = 'inside',
+  InsideTop = 'insideTop',
+  InsideLeft = 'insideLeft',
+  InsideRight = 'insideRight',
+  InsideBottom = 'insideBottom',
+  InsideTopLeft = 'insideTopLeft',
+  InsideTopRight = 'insideTopRight',
+  InsideBottomLeft = 'insideBottomLeft',
+  InsideBottomRight = 'insideBottomRight',
+}
+
+export enum LabelAlignControlsValue {
+  Left = 'left',
+  Center = 'center',
+  Right = 'right',
+}
+export enum LabelVerticalAlignControlsValue {
+  Top = 'top',
+  Middle = 'middle',
+  Bottom = 'bottom',
+}
+
 export const StackControlOptions: [
   JsonValue,
   Exclude<ReactNode, null | undefined | boolean>,
@@ -82,6 +109,46 @@ export const StackControlOptions: [
   [null, t('None')],
   [StackControlsValue.Stack, t('Stack')],
   [StackControlsValue.Stream, t('Stream')],
+];
+
+export const LabelPositionControlOptions: [
+  JsonValue,
+  Exclude<ReactNode, null | undefined | boolean>,
+][] = [
+  [null, t('None')],
+  [LabelPositionControlsValue.Left, 'Left'],
+  [LabelPositionControlsValue.Right, 'Right'],
+  [LabelPositionControlsValue.Top, 'Top'],
+  [LabelPositionControlsValue.Bottom, 'Bottom'],
+  [LabelPositionControlsValue.Inside, 'Inside'],
+  [LabelPositionControlsValue.InsideTop, 'InsideTop'],
+  [LabelPositionControlsValue.InsideLeft, 'InsideLeft'],
+  [LabelPositionControlsValue.InsideRight, 'InsideRight'],
+  [LabelPositionControlsValue.InsideBottom, 'InsideBottom'],
+  [LabelPositionControlsValue.InsideTopLeft, 'InsideTopLeft'],
+  [LabelPositionControlsValue.InsideTopRight, 'InsideTopRight'],
+  [LabelPositionControlsValue.InsideBottomLeft, 'InsideBottomLeft'],
+  [LabelPositionControlsValue.InsideBottomRight, 'InsideBottomRight'],
+];
+
+export const LabelAlignControlOptions: [
+  JsonValue,
+  Exclude<ReactNode, null | undefined | boolean>,
+][] = [
+  [null, t('None')],
+  [LabelAlignControlsValue.Left, 'Left'],
+  [LabelAlignControlsValue.Center, 'Center'],
+  [LabelAlignControlsValue.Right, 'Right'],
+];
+
+export const LabelVerticalAlignControlOptions: [
+  JsonValue,
+  Exclude<ReactNode, null | undefined | boolean>,
+][] = [
+  [null, t('None')],
+  [LabelVerticalAlignControlsValue.Top, 'Top'],
+  [LabelVerticalAlignControlsValue.Middle, 'Middle'],
+  [LabelVerticalAlignControlsValue.Bottom, 'Bottom'],
 ];
 
 export const AreaChartStackControlOptions: [

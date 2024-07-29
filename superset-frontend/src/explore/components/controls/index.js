@@ -22,6 +22,7 @@ import BoundsControl from './BoundsControl';
 import CheckboxControl from './CheckboxControl';
 import CollectionControl from './CollectionControl';
 import ColorPickerControl from './ColorPickerControl';
+import ColorPickerArrayControl from './ColorPickerArrayControl';
 import ColorSchemeControl from './ColorSchemeControl';
 import DatasourceControl from './DatasourceControl';
 import DateFilterControl from './DateFilterControl';
@@ -57,6 +58,7 @@ const controlMap = {
   CheckboxControl,
   CollectionControl,
   ColorPickerControl,
+  ColorPickerArrayControl,
   ColorSchemeControl,
   ColumnConfigControl,
   CurrencyControl,
