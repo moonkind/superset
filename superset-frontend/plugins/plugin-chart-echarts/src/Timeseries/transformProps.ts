@@ -200,6 +200,8 @@ export default function transformProps(
     labelCustomFormatter,
     labelNameFontSize,
     customColors,
+    showXAxisLabel,
+    showXAxisTick,
   }: EchartsTimeseriesFormData = { ...DEFAULT_FORM_DATA, ...formData };
   const refs: Refs = {};
   const groupBy = ensureIsArray(groupby);
@@ -512,6 +514,10 @@ export default function transformProps(
       hideOverlap: true,
       formatter: xAxisFormatter,
       rotate: xAxisLabelRotation,
+      show: showXAxisLabel,
+    },
+    axisTick: {
+      show: showXAxisTick,
     },
     minorTick: { show: minorTicks },
     minInterval:
