@@ -71,6 +71,8 @@ const {
   labelFontSize,
   labelCustomFormatter,
   labelNameFontSize,
+  showXAxisLabel,
+  showXAxisTick,
 } = DEFAULT_FORM_DATA;
 
 function createAxisTitleControl(axis: 'x' | 'y'): ControlSetRow[] {
@@ -466,6 +468,32 @@ const config: ControlPanelConfig = {
         ...legendSection,
         [<ControlSubSectionHeader>{t('X Axis')}</ControlSubSectionHeader>],
         ...createAxisControl('x'),
+        [
+          {
+            name: 'showXAxisLabel',
+            config: {
+              type: 'CheckboxControl',
+              label: 'Показывать метки оси X',
+              default: showXAxisLabel,
+              renderTrigger: true,
+              description:
+                'Показывает метки по оси X',
+            },
+          },
+        ],
+        [
+          {
+            name: 'showXAxisTick',
+            config: {
+              type: 'CheckboxControl',
+              label: 'Показывать отметки оси X',
+              default: showXAxisTick,
+              renderTrigger: true,
+              description:
+                'Показывает отметки по оси X',
+            },
+          },
+        ],
         ...richTooltipSection,
         [<ControlSubSectionHeader>{t('Y Axis')}</ControlSubSectionHeader>],
         ...createAxisControl('y'),

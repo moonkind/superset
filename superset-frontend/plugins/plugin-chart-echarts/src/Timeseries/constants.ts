@@ -95,6 +95,8 @@ export const DEFAULT_FORM_DATA: EchartsTimeseriesFormData = {
   labelCustomFormatter: false,
   labelNameFontSize: 0,
   customColors: [],
+  showXAxisLabel: true,
+  showXAxisTick: true,
 };
 
 export const TIME_SERIES_DESCRIPTION_TEXT: string = t(
