@@ -97,6 +97,14 @@ class CeleryConfig:
 
 CELERY_CONFIG = CeleryConfig
 
+
+# Добавление русского языка в список доступных языков
+LANGUAGES = {
+    "ru": {"flag": "ru", "name": "Русский"}  
+}
+# Установка русского языка в качестве языка по умолчанию
+BABEL_DEFAULT_LOCALE = "ru"
+
 FEATURE_FLAGS = {"ALERT_REPORTS": True}
 ALERT_REPORTS_NOTIFICATION_DRY_RUN = True
 WEBDRIVER_BASEURL = "http://superset:8088/"  # When using docker compose baseurl should be http://superset_app:8088/
@@ -117,3 +125,5 @@ try:
     )
 except ImportError:
     logger.info("Using default Docker config...")
+
+

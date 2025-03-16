@@ -499,8 +499,7 @@ const config: ControlPanelConfig = {
               label: 'Показывать метки оси X',
               default: showXAxisLabel,
               renderTrigger: true,
-              description:
-                'Показывает метки по оси X',
+              description: 'Показывает метки по оси X',
             },
           },
         ],
@@ -512,8 +511,7 @@ const config: ControlPanelConfig = {
               label: 'Показывать отметки оси X',
               default: showXAxisTick,
               renderTrigger: true,
-              description:
-                'Показывает отметки по оси X',
+              description: 'Показывает отметки по оси X',
             },
           },
         ],

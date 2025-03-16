@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { SketchPicker } from 'react-color';
-import { getCategoricalSchemeRegistry, css } from '@superset-ui/core';
+import { getCategoricalSchemeRegistry, css, styled } from '@superset-ui/core';
 import Popover from 'src/components/Popover';
 import ControlHeader from '../ControlHeader';
 
@@ -14,20 +14,21 @@ const defaultProps = {
   onChange: () => {},
 };
 
+const ColorItem = styled.div`
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  border-radius: 4px;
+  padding: 4px;
+  background-color: ${({ theme }) => theme.colors.grayscale.light2};
+`;
+
 const styles = {
   container: {
     display: 'flex',
     gap: '8px',
     flexWrap: 'wrap',
     alignItems: 'center',
-  },
-  colorItem: {
-    display: 'flex',
-    gap: '4px',
-    alignItems: 'center',
-    borderRadius: '4px',
-    padding: '4px',
-    backgroundColor: '#eee',
   },
   colorPopover: {
     width: '24px',
@@ -102,7 +103,7 @@ export default class ColorPickerArrayControl extends React.Component {
 
   renderColor(color, index) {
     return (
-      <div key={index} style={styles.colorItem}>
+      <ColorItem key={index}>
         <Popover
           trigger="click"
           placement="right"
@@ -111,10 +112,15 @@ export default class ColorPickerArrayControl extends React.Component {
         >
           <div style={{ backgroundColor: color, ...styles.colorPopover }} />
         </Popover>
-        <div style={styles.removeBtn} onClick={() => this.removeColor(index)}>
+        <div
+          role="button"
+          style={styles.removeBtn}
+          onClick={() => this.removeColor(index)}
+          tabIndex={0}
+        >
           ✖️
         </div>
-      </div>
+      </ColorItem>
     );
   }
 
